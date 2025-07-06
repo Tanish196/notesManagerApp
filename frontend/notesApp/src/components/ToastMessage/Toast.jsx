@@ -1,0 +1,35 @@
+import React from 'react'
+import { LuCheck } from 'react-icons/lu'
+import { MdDelete } from 'react-icons/md'
+import { useEffect } from 'react'
+
+const Toast = ({ isShown, message, type, onClose }) => {
+
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            onClose();
+        }, 3000)
+        return () => {
+            clearTimeout(timeoutId)
+        }
+    }, [onClose])
+
+    return (
+        <div className={`absolute top-20 right-6 transition-all duration-400 ${isShown ? 'opacity-100' : 'opacity-0'}`}>
+            <div className={`min-w-52 border shadow-2xl  bg-white ${type === 'delete' ? 'after:bg-red-500' : "after:bg-green-200"} rounded-md after:w-[5px] after:h-full after:absolute after:left-0 after:top-0 after: rounded-l-lg`}>
+                <div className='flex items-center gap-2 px-4 py-2'>
+                    <div className={`w-10 h-10 flex items-center justify-center rounded-full`}>
+                        {type === 'delete' ? (
+                            <MdDelete className='text-xl text-red-500' />) : (
+                            <LuCheck className='text-xl text-green-500' />)
+                        }
+                    </div>
+
+                    <p className='text-sm text-slate-800'>{message}</p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Toast
