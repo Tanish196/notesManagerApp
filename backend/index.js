@@ -36,7 +36,7 @@
 
     // cors enables Cross-Origin Resource Sharing so the backend can talk to the frontend even if hosted on different domains/ports.
     app.use(cors({
-        origin: "https://notes-manager-app.vercel.app", // your Vercel frontend
+        origin: "*", // your Vercel frontend
         credentials: true
     }));
 
