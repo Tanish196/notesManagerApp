@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Profile from '../cards/Profile'
+import Profile from '../Cards/Profile'
 import { useNavigate } from 'react-router-dom'
 import SearchBar from '../searchBar/SearchBar'
 
