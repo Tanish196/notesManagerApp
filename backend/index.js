@@ -6,12 +6,12 @@ const mongoose = require("mongoose");
 // Use mongoUri to connect with mongoose or MongoClient
 
 // const config = require("./config.json")
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log("✅ MongoDB connected"))
-.catch(err => console.error("❌ MongoDB connection error:", err));
+// mongoose.connect(process.env.MONGO_URI, {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// })
+// .then(() => console.log("✅ MongoDB connected"))
+// .catch(err => console.error("❌ MongoDB connection error:", err));
 
 // const mongoose = require("mongoose")
 // mongoose.connect(config.connectionString)
@@ -36,8 +36,8 @@ app.use(express.json())
 
 // cors enables Cross-Origin Resource Sharing so the backend can talk to the frontend even if hosted on different domains/ports.
 app.use(cors({
-    // Allows any origin (frontend) to make requests to this backend.
-    origin: "*",
+    origin: "https://notes-manager-app.vercel.app", // your Vercel frontend
+    credentials: true
 }));
 
 app.get('/', (req, res) => {
