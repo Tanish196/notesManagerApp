@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 const config = require("./config.json")
 // const mongoose = require("mongoose")
 // mongoose.connect(config.connectionString)
+
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -132,7 +133,7 @@ app.post('/login', async (req, res) => {
 
     if (userInfo.email == email && userInfo.password == password) {
         // why wrapping of user??
-        //  If you want to namespace or organize your payload better (e.g., { user: ..., role: ... }).
+        // If you want to namespace or organize your payload better (e.g., { user: ..., role: ... }).
         // To avoid potential naming collisions in the JWT payload with fields like iat, exp, etc.
         // If your frontend expects the data inside a user object after decoding.
         const user = { user: userInfo }
@@ -290,8 +291,11 @@ app.get('/search-note/', authenticateToken, async (req, res) => {
     try {
         const matchingNotes = await Note.find({
             userId: user._id,
+            // Matches if either the title or content contains the query string.
             $or: [
+                // Uses regex: Performs a case-insensitive partial match (because of "i" in RegExp).
                 { title: { $regex: new RegExp(query, "i") } },
+                // Consider using text indexes and $ text instead of $ regex if performance becomes an issue and to use relevance score as a feature
                 { content: { $regex: new RegExp(query, "i") } }
             ]
         })

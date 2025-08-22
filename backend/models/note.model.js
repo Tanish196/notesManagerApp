@@ -6,7 +6,6 @@ const noteSchema = new Schema({
     createdOn: { type: Date, default: Date.now },
     content: { type: String },
     tags: { type: [String], default: [] }, // tag expects array 
-
     isPinned: { type: Boolean, default: false },
     userId: { type: String, required: true }
 });

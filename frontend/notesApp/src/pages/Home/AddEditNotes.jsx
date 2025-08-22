@@ -1,6 +1,5 @@
 import React, { use, useState } from 'react'
 import TagInput from '../../components/Input/TagInput'
-import { IoMdClose } from 'react-icons/io'
 import { MdClose } from 'react-icons/md'
 import axiosInstance from '../../utils/axiosInstance'
 
