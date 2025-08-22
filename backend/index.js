@@ -5,7 +5,14 @@ const mongoose = require("mongoose");
 // const mongoUri = process.env.MONGO_URI;
 // Use mongoUri to connect with mongoose or MongoClient
 
-const config = require("./config.json")
+// const config = require("./config.json")
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => console.log("✅ MongoDB connected"))
+.catch(err => console.error("❌ MongoDB connection error:", err));
+
 // const mongoose = require("mongoose")
 // mongoose.connect(config.connectionString)
 
@@ -312,5 +319,9 @@ app.get('/search-note/', authenticateToken, async (req, res) => {
     }
 })
 
-app.listen(8000);
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
 module.exports = app
