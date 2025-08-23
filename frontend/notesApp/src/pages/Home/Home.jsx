@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import Note from '../../components/Cards/Note'
 import { MdAdd } from 'react-icons/md'
@@ -61,7 +61,7 @@ const Home = () => {
   }
 
   const handleDelete = async (item) => {
-    const itemId = item._id
+    const itemId = item?._id
     try {
       const res = await axiosInstance.delete('/delete-note/' + itemId)
 
@@ -85,7 +85,7 @@ const Home = () => {
     } catch (error) {
       if (error.response && error.response.status === 401) {
         localStorage.clear()
-        navigate('/login')
+        navigate('/LogIn')
       }
     }
   }
@@ -120,28 +120,32 @@ const Home = () => {
   useEffect(() => {
     getUserInfo()
     getAllNotes()
-    handleDelete()
+    // handleDelete()
     return () => { }
   }, [])
 
+  const notesList = useMemo(() => {
+    return allNotes.map((item) => (
+      <Note
+        key={item._id}
+        title={item.title}
+        date={moment(item.createdOn).format("Do MMM YYYY")}
+        content={item.content}
+        tags={item.tags}
+        isPinned={item.isPinned}
+        onPinNote={() => updateIsPinned(item)}
+        onDelete={() => handleDelete(item)}
+        onEdit={() => handleEdit(item)}
+      />
+    ));
+  }, [allNotes]); // re-run only when allNotes changes
+  
   return (<>
     <Navbar userInfo={userInfo} onSearchNote={onSearchNote} handleClearSearch={handleClearSearch} />
     <div className='mx-auto container px-4'>
       {allNotes.length > 0 ?
         <div className="cards grid grid-cols-3 gap-4 mt-8">
-          {allNotes.map((item, index) => (
-            <Note
-              key={item._id}
-              title={item.title}
-              date={moment(item.createdOn).format("Do MMM YYYY")}
-              content={item.content}
-              tags={item.tags}
-              isPinned={item.isPinned}
-              onPinNote={() => updateIsPinned(item)}
-              onDelete={() => handleDelete(item)}
-              onEdit={() => handleEdit(item)}
-            />
-          ))}
+          {notesList}
         </div> : (isSearch ? (<div className='flex justify-center mt-40 text-4xl text-center text-white'>Note not found. Click the Add button to create note</div>) : (<div className='flex justify-center mt-40 text-4xl text-center text-white'>No Notes yet. Start creating your first note. Click the Add button to create notes</div>))}
     </div>
 

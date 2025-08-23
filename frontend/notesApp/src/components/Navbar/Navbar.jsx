@@ -5,9 +5,10 @@ import SearchBar from '../searchBar/SearchBar'
 
 const Navbar = ({ userInfo, onSearchNote, handleClearSearch}) => {
   const navigate = useNavigate()
+
   const onLogout = () => {
     localStorage.clear()
-    navigate("/login")
+    navigate("/LogIn")
   }
 
   const [searchQuery, setSearchQuery] = useState("")

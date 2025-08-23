@@ -2,7 +2,7 @@ import { BASE_URL } from "./constants"
 import axios from "axios"
 
 const axiosInstance = axios.create({
-    baseURL: "https://notesmanagerapp.onrender.com",
+    baseURL: BASE_URL,
     // If the request takes more than 10 seconds, it will fail.
     timeout: 10000,
     // Every request is sent as JSON.
