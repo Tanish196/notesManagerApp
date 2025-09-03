@@ -167,22 +167,26 @@ const Home = () => {
           </div>
           <span className="ml-4 text-xl text-green-600 animate-pulse">Loading notes...</span>
         </div>
-      ) : allNotes.length > 0 ?
-        <div className={`cards ${
-  viewMode === 'grid' 
-    ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
-    : 'flex flex-col'
-} gap-6 mt-8 animate-fadeInNoteList`}>
-          {notesList}
-        </div> : (isSearch ? (
-          <div className='flex justify-center mt-40 text-2xl sm:text-4xl text-center text-green-700 animate-fadeInNoteList'>
-            Note not found. Click the Add button to create note
-          </div>
-        ) : (
-          <div className='flex justify-center mt-40 text-2xl sm:text-4xl text-center text-green-700 animate-fadeInNoteList'>
-            No Notes yet. Start creating your first note. Click the Add button to create notes
-          </div>
-        ))}
+      ) : (
+        <>
+          {allNotes.length > 0 ? (
+            <div className={`cards ${
+              viewMode === 'grid' 
+                ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
+                : 'flex flex-col'
+            } gap-6 mt-8 animate-fadeInNoteList`}>
+              {notesList}
+            </div>
+          ) : (
+            <div className='flex justify-center mt-40 text-2xl sm:text-4xl text-center text-green-700 animate-fadeInNoteList'>
+              {isSearch 
+                ? "Note not found. Click the Add button to create note"
+                : "No Notes yet. Start creating your first note. Click the Add button to create notes"
+              }
+            </div>
+          )}
+        </>
+      )}
     </div>
 
     <button
