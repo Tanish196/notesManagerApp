@@ -26,6 +26,7 @@ const Home = () => {
 
   const [allNotes, setAllNotes] = useState([])
   const [userInfo, setUserInfo] = useState(null)
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const navigate = useNavigate()
 
   const showToastMessage = ({ message, type }) => {
@@ -124,6 +125,18 @@ const Home = () => {
     return () => { }
   }, [])
 
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.ctrlKey && e.key === 'a') {
+        e.preventDefault();
+        setOpenAddEditModal({ isShown: true, type: "add", data: null });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
   const notesList = useMemo(() => {
     return allNotes.map((item) => (
       <Note
@@ -142,17 +155,33 @@ const Home = () => {
   
   return (<>
     <Navbar userInfo={userInfo} onSearchNote={onSearchNote} handleClearSearch={handleClearSearch} />
-    <div className='mx-auto container px-4'>
+    <div className='mx-auto container px-4 pt-20'>
       {allNotes.length > 0 ?
-        <div className="cards grid grid-cols-3 gap-4 mt-8">
+        <div className={`cards ${
+  viewMode === 'grid' 
+    ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
+    : 'flex flex-col'
+} gap-6 mt-8 animate-fadeInNoteList`}>
           {notesList}
-        </div> : (isSearch ? (<div className='flex justify-center mt-40 text-4xl text-center text-white'>Note not found. Click the Add button to create note</div>) : (<div className='flex justify-center mt-40 text-4xl text-center text-white'>No Notes yet. Start creating your first note. Click the Add button to create notes</div>))}
+        </div> : (isSearch ? (
+          <div className='flex justify-center mt-40 text-2xl sm:text-4xl text-center text-green-700 animate-fadeInNoteList'>
+            Note not found. Click the Add button to create note
+          </div>
+        ) : (
+          <div className='flex justify-center mt-40 text-2xl sm:text-4xl text-center text-green-700 animate-fadeInNoteList'>
+            No Notes yet. Start creating your first note. Click the Add button to create notes
+          </div>
+        ))}
     </div>
 
-    <button className='w-16 h-16 flex rounded-l-3xl text-secondary bg-white items-center justify-center absolute right-0 bottom-10 hover:bg-black  hover:text-white '>
-      <MdAdd className='text-4xl' onClick={() => {
+    <button
+      className='w-16 h-16 flex rounded-l-3xl text-secondary bg-green-600 items-center justify-center fixed right-0 bottom-10 shadow-lg hover:bg-green-700 hover:text-white transition animate-bounceAdd'
+      onClick={() => {
         setOpenAddEditModal({ isShown: true, type: "add", data: null });
-      }} />
+      }}
+      aria-label="Add Note"
+    >
+      <MdAdd className='text-4xl' />
     </button>
 
     <Modal
@@ -160,20 +189,61 @@ const Home = () => {
       onRequestClose={() => { }}
       style={{
         overlay: {
-          backgroundColor: "rgba(0, 0, 0, 0.2)",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          zIndex: 1000
         },
+        content: {
+          position: 'relative',
+          top: 'auto',
+          left: 'auto',
+          right: 'auto',
+          bottom: 'auto',
+          padding: 0,
+          border: 'none'
+        }
       }}
       contentLabel=''
-      className={"w-[40%] max-h-3/4 bg-white rounded-md mx-auto mt-14 p-5 overflow-auto"}>
-
-      <AddEditNotes type={openAddEditModal.type} noteData={openAddEditModal.data} onClose={() => {
-        setOpenAddEditModal({ isShown: false, type: "add", data: null });
-      }}
+      className={"w-[95%] sm:w-[500px] max-h-[90vh] bg-transparent mx-auto overflow-visible animate-fadeInNote"}
+    >
+      <AddEditNotes
+        type={openAddEditModal.type}
+        noteData={openAddEditModal.data}
+        onClose={() => {
+          setOpenAddEditModal({ isShown: false, type: "add", data: null });
+        }}
         getAllNotes={getAllNotes}
-        showToastMessage={showToastMessage} />
-
+        showToastMessage={showToastMessage}
+      />
     </Modal>
     {toast.message && <Toast isShown={toast.isShown} message={toast.message} type={toast.type} onClose={() => { setToast({ isShown: false, message: '' }) }} />}
+    <style>
+      {`
+        .animate-fadeInNoteList {
+          animation: fadeInNoteList 0.7s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes fadeInNoteList {
+          from { opacity: 0; transform: translateY(30px);}
+          to { opacity: 1; transform: translateY(0);}
+        }
+        .animate-bounceAdd {
+          animation: bounceAdd 1.2s infinite;
+        }
+        @keyframes bounceAdd {  
+          0%, 100% { transform: translateY(0);}
+          50% { transform: translateY(-10px);}
+        }
+        .animate-fadeInNote {
+          animation: fadeInNote 0.3s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes fadeInNote {
+          from { opacity: 0; transform: scale(0.95);}
+          to { opacity: 1; transform: scale(1);}
+        }
+      `}
+    </style>
   </>
 
   )

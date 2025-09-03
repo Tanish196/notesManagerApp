@@ -67,15 +67,15 @@ const AddEditNotes = ({ showToastMessage, noteData, type, onClose, getAllNotes }
     }
 
     return (
-        <div className='relative'>
-            <button className='w-10 h-10 bg-primary rounded-xl flex items-center justify-center absolute -top-3 -right-3 cursor-pointer'>
+        <div className='relative bg-white p-6 rounded-2xl shadow-lg border border-gray-200 max-w-md w-full'>
+            <button className='w-10 h-10 bg-primary hover:bg-primary/90 transition-colors rounded-xl flex items-center justify-center absolute -top-3 -right-3 cursor-pointer shadow-md'>
                 <MdClose className='text-xl text-slate-950' onClick={onClose} />
             </button>
-            <div className='flex relative flex-col gap-2 w-80'>
-                <label className='input-label ' >TITLE</label>
+            <div className='flex relative flex-col gap-2 w-full'>
+                <label className='input-label font-semibold text-gray-700' >TITLE</label>
                 <input
                     type="text"
-                    className='text-2xl text-slate-950 outline-none'
+                    className='text-2xl text-slate-950 outline-none border-b-2 border-gray-200 focus:border-primary transition-colors px-2 py-1'
                     placeholder='Enter Title'
                     // onChange={(e)=>setTitle(e.target.value)}  same as below
                     onChange={({ target }) => setTitle(target.value)}
@@ -83,22 +83,27 @@ const AddEditNotes = ({ showToastMessage, noteData, type, onClose, getAllNotes }
             </div>
 
             <div className='flex flex-col gap-2 mt-4'>
-                <label className='input-label'>CONTENT</label>
+                <label className='input-label font-semibold text-gray-700'>CONTENT</label>
                 <textarea
                     type='text'
-                    className='rounded text-sm text-slate-9500 outline-none bg-slate-50 p-2'
+                    className='rounded-lg text-sm text-slate-950 outline-none bg-slate-50 p-3 border border-gray-200 focus:border-primary transition-colors min-h-[200px] resize-none'
                     rows={10}
                     onChange={({ target }) => setContent(target.value)}
                     value={content}
-                    placeholder='content' />
+                    placeholder='Write your note content here...' />
             </div>
 
             <div className="mt-3">
-                <label className="input-label">TAGS</label>
+                <label className="input-label font-semibold text-gray-700">TAGS</label>
                 <TagInput tags={tags} setTags={setTags} />
             </div>
-            {error && <p className='text-red-500'>{error}</p>}
-            <button className='btn-primary font-medium mt-5 p-3' onClick={handleAddNote}>{type === "edit" ? "UPDATE" : "ADD"}</button>
+            {error && <p className='text-red-500 mt-2 text-sm'>{error}</p>}
+            <button 
+                className='bg-primary text-white font-medium mt-6 py-3 px-6 w-full rounded-xl hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0 duration-150' 
+                onClick={handleAddNote}
+            >
+                {type === "edit" ? "UPDATE" : "ADD"}
+            </button>
         </div>
     )
 }
