@@ -27,6 +27,7 @@ const Home = () => {
   const [allNotes, setAllNotes] = useState([])
   const [userInfo, setUserInfo] = useState(null)
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate()
 
   const showToastMessage = ({ message, type }) => {
@@ -92,6 +93,7 @@ const Home = () => {
   }
 
   const getAllNotes = async () => {
+    setIsLoading(true);
     try {
       const res = await axiosInstance.get('/get-all-notes')
       if (res.data && res.data.notes) {
@@ -99,6 +101,8 @@ const Home = () => {
       }
     } catch (error) {
       console.log("An unexpected Error occurred")
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -156,7 +160,14 @@ const Home = () => {
   return (<>
     <Navbar userInfo={userInfo} onSearchNote={onSearchNote} handleClearSearch={handleClearSearch} />
     <div className='mx-auto container px-4 pt-20'>
-      {allNotes.length > 0 ?
+      {isLoading ? (
+        <div className="flex justify-center items-center mt-40">
+          <div className="animate-loading">
+            <div className="h-16 w-16 border-4 border-t-green-500 border-r-green-200 border-b-green-200 border-l-green-200 rounded-full animate-spin"></div>
+          </div>
+          <span className="ml-4 text-xl text-green-600 animate-pulse">Loading notes...</span>
+        </div>
+      ) : allNotes.length > 0 ?
         <div className={`cards ${
   viewMode === 'grid' 
     ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' 
@@ -241,6 +252,17 @@ const Home = () => {
         @keyframes fadeInNote {
           from { opacity: 0; transform: scale(0.95);}
           to { opacity: 1; transform: scale(1);}
+        }
+        .animate-loading {
+          display: inline-block;
+          position: relative;
+        }
+        .animate-spin {
+          animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
       `}
     </style>
